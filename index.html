@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Una carta para ti</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+:root{
+  --bg1:#fff1f3;--bg2:#ffd9e2;--paper:#fffaf6;--ink:#4a2a35;--accent:#c2385a;--soft:#a86b7d;--shadow:rgba(120,30,60,.25);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg1:#2a0f1c;--bg2:#4a1630;--paper:#3a1a28;--ink:#fbe6ec;--accent:#ff7a9c;--soft:#e2a6b8;--shadow:rgba(0,0,0,.5);color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg1:#2a0f1c;--bg2:#4a1630;--paper:#3a1a28;--ink:#fbe6ec;--accent:#ff7a9c;--soft:#e2a6b8;--shadow:rgba(0,0,0,.5);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);font-family:'Cormorant Garamond',Georgia,serif;font-size:1.3rem;line-height:1.75;overflow-x:hidden}
+#hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.h{position:absolute;bottom:-40px;color:var(--accent);opacity:.0;animation:up linear forwards}
+@keyframes up{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:.6}100%{transform:translateY(-110vh) translateX(30px);opacity:0}}
+
+#cover{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:linear-gradient(160deg,var(--bg1),var(--bg2));transition:opacity 1.2s,visibility 1.2s}
+#cover.gone{opacity:0;visibility:hidden}
+.env{font-size:5.5rem;animation:beat 1.6s ease-in-out infinite;filter:drop-shadow(0 8px 14px var(--shadow))}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+#cover h1{font-family:'Great Vibes',cursive;font-weight:400;font-size:3rem;color:var(--accent);margin:.3em 0 .1em}
+#cover p{margin:0 0 1.4em;color:var(--soft);font-style:italic}
+button{font:inherit;cursor:pointer}
+#open{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:.7em 2em;font-size:1.2rem;box-shadow:0 8px 20px var(--shadow)}
+#open:active{transform:scale(.97)}
+
+.song{display:inline-block;margin-top:1em;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:999px;padding:.5em 1.4em;font-size:1.1rem}
+.song:active{transform:scale(.97)}
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:60px 22px 120px}
+.hero{text-align:center;padding:40px 0 30px}
+.hero .t{font-family:'Great Vibes',cursive;font-size:clamp(3rem,12vw,5rem);color:var(--accent);line-height:1.1}
+.hero .s{color:var(--soft);font-style:italic}
+.paper{background:var(--paper);border-radius:18px;padding:34px 26px;box-shadow:0 20px 50px var(--shadow);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)}
+.paper p{margin:0 0 1.3em;text-indent:0;text-align:justify}.paper p.big{text-align:center}.paper strong{color:var(--accent)}
+.dear{font-family:'Great Vibes',cursive;font-size:2.4rem;color:var(--accent);margin-bottom:.4em!important}
+.rev{opacity:0;transform:translateY(22px);transition:opacity 1.4s ease,transform 1.4s ease}
+.rev.in{opacity:1;transform:none}
+.promise{border-left:3px solid var(--accent);padding-left:16px;margin:0 0 1.2em;font-style:italic}
+.big{font-family:'Great Vibes',cursive;font-size:2.2rem;color:var(--accent);text-align:center;line-height:1.3}
+.sign{text-align:right;margin-top:1.5em}
+.sign .n{font-family:'Great Vibes',cursive;font-size:2.2rem;color:var(--accent);display:block;line-height:1.2}
+.end{text-align:center;font-size:2.4rem;color:var(--accent);margin-top:30px;animation:beat 1.6s ease-in-out infinite}
+
+#mute{position:fixed;right:max(14px,env(safe-area-inset-right,0px));top:calc(14px + env(safe-area-inset-top,0px));z-index:20;width:46px;height:46px;border-radius:50%;border:0;background:var(--paper);color:var(--accent);font-size:1.2rem;box-shadow:0 6px 16px var(--shadow)}
+</style>
+</head>
+<body>
+<div id="hearts"></div>
+
+<div id="cover">
+  <div class="env">💌</div>
+  <h1>Para ti, mi amor</h1>
+  <p>Escribí esto con el corazón.<br>
+  <button id="open">Abrir mi carta</button>
+</div>
+
+<button id="mute" aria-label="Música" title="Música">♪</button>
+<audio id="musica" src="CODPLAY.mp3" loop preload="auto"></audio>
+
+<main>
+  <div class="hero rev">
+    <div class="t">Una carta para ti</div>
+    <div class="s">con todo lo que a veces no sé decir en voz alta</div>
+  </div>
+
+  <div class="paper">
+    <p class="rev">Bueno amor, quería conversar contigo hace unos días y decirte todo esto, pero sentía que, a veces, no te encontrabas con las ganas de hablar sobre lo que estamos pasando, es lo que yo sentía. No sé si era eso o simplemente no encontrábamos la manera de hacerlo. Hoy encontré la forma de escribirte con el corazón, porque hay cosas que no me salen bien al hablar, y esta es una de ellas. Quería que tuvieras estas palabras aquí, escritas, para que puedas volver a leerlas cada vez que sientas alguna duda sobre nosotros, sobre lo que siento por ti o sobre el lugar que ocupas en mi vida.</p>
+    <p class="rev">Ya hace una semana que me mencionas que no me sientes como antes, y no voy a esconderme detrás de excusas ni a fingir que no pasa nada. Puede que tengas razón, amor. Quizá me he distraído, quizá he dejado de demostrarte algunas cosas que antes hacía sin pensarlo, pero no es porque me haya aburrido de nosotros ni porque mis sentimientos hayan cambiado. Hay veces en las que me atormento con miles de problemas en la cabeza y, por no querer preocuparte, prefiero guardármelos y enfrentarlos yo solo. Creo que eso es lo que has estado notando, que poco a poco he dejado de mostrarte lo que siento de la misma manera que antes. Y créeme que me duele, porque lo que más me duele no es que me digas que he cambiado, sino saber que, por mis actitudes, he conseguido que dudes de lo que significas para mí.</p>
+    <p class="rev">Por eso quiero decirte la verdad más grande que llevo en el corazón: <strong>lo que cambió no fue lo que siento por ti, sino lo que he dejado de demostrarte.</strong> Sigo siendo el mismo que se enamoró de ti, el mismo que se alegra cuando recibe un mensaje tuyo, el mismo que sonríe por cualquier tontería que haces y el mismo que sigue buscándote con la mirada cuando entra a un lugar. Sigo siendo ese chico que, sin darse cuenta, empezó a imaginar cosas bonitas a tu lado y que hoy, a pesar de las dificultades, sigue queriendo construirlas contigo.</p>
+    <p class="rev">Sé que durante estas últimas semanas hemos pasado por problemas que nos han tenido angustiados a ambos. Sé que no todo ha sido bonito y que, a veces, las preocupaciones nos han ganado y nos han hecho sentir cosas que quizá nunca quisimos sentir. Pero no quiero que esos momentos difíciles nos hagan olvidar todo lo bonito que recién está empezando a crecer entre nosotros. No quiero que, por los días malos, terminemos dudando de algo que nos ha regalado tantos momentos felices. Porque, a pesar de todas las cosas buenas y malas que estoy viviendo contigo, no quiero marcharme de tu lado. Siento que, si algún día me fuera, dejaría una parte de mi corazón contigo, en un lugar al que ni siquiera sabría cómo regresar.</p>
+    <p class="rev">Contigo he encontrado muchas cosas que ni siquiera sabía que necesitaba, y estoy empezando a construir sueños que alguna vez me prometí cumplir con la persona correcta. Y qué bonito es darme cuenta de que, poco a poco, cada uno de esos sueños va tomando forma a tu lado. No sabes lo feliz que me hace imaginar que muchas de las cosas que antes solo pensaba, hoy puedo empezar a vivirlas contigo.</p>
+    <p class="rev">Así como siempre te he recalcado que nunca estarás sola, quiero que sepas que te lo digo de corazón. Quiero estar contigo en tus días bonitos, pero también en esos días en los que ni tú misma entiendas lo que sientes, en los que estés cansada de todo y solo necesites a alguien que te escuche. Quiero que puedas encontrar en mí esa tranquilidad que a veces el mundo no te da. Quizá todavía me falte demostrarte muchas cosas y sé que no basta con prometerlas, pero quiero aprender a hacerlo mejor, porque tú mereces sentirte querida, segura y valorada.</p>
+    <p class="rev">Capaz no te das cuenta de lo especial que eres para mí, aunque sinceramente creo que te lo he dicho muchas veces. Eres la primera chica con la que estoy dando todo de esta manera, porque siempre me dije que quería entregar mis sentimientos, mis detalles, mi tiempo y mis ganas de construir algo bonito a una sola persona, a alguien que realmente significara algo en mi vida. Y llegaste tú. Poco a poco me fuiste demostrando que todo lo que hago por ti no es por compromiso, ni porque sienta que debo hacerlo, sino porque me nace del corazón. Porque verte feliz también me hace feliz, porque una sonrisa tuya puede alegrarme un día complicado y porque, entre tantas cosas que me pasan por la cabeza, tú sigues siendo una de las razones más bonitas para sonreír.</p>
+    <p class="rev">Y si hay algo que quisiera pedirte, es que nunca olvides estos textos, estas páginas y cada una de las palabras que te he escrito. Guárdalas como algo bonito de nosotros, porque yo nunca voy a olvidar el sentimiento con el que las escribí. Quizá algún día volvamos a leerlas y recordemos cómo empezó todo, las cosas que nos preocupaban, las promesas que nos hacíamos y las ganas que teníamos de que lo nuestro funcionara. Y ojalá, cuando llegue ese día, podamos sonreír al darnos cuenta de que, incluso cuando tuvimos momentos difíciles, hubo dos personas que intentaron aprender a quererse cada vez mejor.</p>
+    <p class="rev">También quiero que recuerdes que siempre voy a estar agradecido contigo por aceptarme como soy, por darme un espacio en tu vida y por permitirme compartir contigo una parte tan bonita de mí. Sé que hay veces en las que te he decepcionado, en las que mis actitudes te han hecho sentir mal o en las que he dudado de ciertas cosas. No quiero justificar mis errores, porque sé que quererte también significa reconocer cuando me equivoco y esforzarme por mejorar. Soy una persona que todavía tiene mucho que aprender, pero quiero aprender también a tu lado, corregir lo que estoy haciendo mal y demostrarte con hechos que puedo cuidar mejor de esto tan bonito que tenemos. Gracias por tu paciencia, por los momentos que me has regalado y por permitirme conocerte de esa manera tan especial. Gracias, de verdad, por ser tú.</p>
+    <p class="rev">Y es por eso que hoy me encuentro aquí, escribiéndote todo esto, porque quiero que entiendas que eres un complemento muy importante en mi vida. Contigo he aprendido que querer a alguien no consiste solamente en decir «te amo», sino también en quedarse, cuidar, escuchar, comprender y elegir a esa persona incluso cuando las cosas no son fáciles. He aprendido que el amor no siempre se demuestra con grandes palabras, sino también con pequeños detalles, con la preocupación de saber si estás bien, con las ganas de arreglar las cosas después de un mal momento y con la decisión de no dejar que el orgullo hable más fuerte que el corazón.</p>
+    <p class="rev"><strong>Y yo te elijo a ti, amor. Hoy, mañana y también en esos días en los que las cosas no sean fáciles.</strong> Te elijo porque, a pesar de mis preocupaciones, de mis errores y de todo lo que todavía tengo que aprender, mis sentimientos por ti siguen aquí. No quiero que tengas que adivinar cuánto te amo ni que tengas que conformarte con recordar cómo era antes. Quiero volver a demostrártelo, quiero que vuelvas a sentirlo y quiero que mis acciones te den esa tranquilidad que quizá mis palabras no te han sabido dar últimamente.</p>
+    <p class="rev">No te escribo esto para prometerte que nunca volveremos a tener problemas, porque sé que no somos perfectos y que la vida no siempre será sencilla. Te lo escribo porque quiero que, cuando lleguen esos días difíciles, recordemos que tenemos algo que vale la pena cuidar. Que podamos hablar, escucharnos y corregir nuestros errores sin olvidar por qué decidimos estar juntos.</p>
+    <p class="rev">Y si alguna vez vuelves a sentir que ya no soy el mismo, quisiera que me lo dijeras, que me permitieras escucharte y entender qué te está haciendo falta. No quiero que te acostumbres a sentirte sola estando conmigo, ni que guardes en tu corazón dudas que podamos hablar juntos. Quiero aprender a quererte de la manera en que tú necesitas sentirte querida, así como también quiero que podamos comprendernos y crecer juntos.</p>
+    <p class="rev"><strong>Porque, entre todas las cosas que puedo perder, una de las que más me dolería sería dejar que lo nuestro se apague sin haber hecho todo lo posible por cuidarlo.</strong> No quiero que algún día seamos dos personas que se recuerden con tristeza pensando en todo lo que pudieron haber sido. Quiero que seamos esas dos personas que, a pesar de las dificultades, se dieron la oportunidad de intentarlo, de aprender, de madurar y de construir algo de lo que puedan sentirse orgullosas.</p>
+    <p class="rev">Te amo, y quizá no siempre encuentre las palabras perfectas para explicarte cuánto, pero espero que estas páginas te permitan sentir un poquito de todo lo que llevo dentro. Si alguna vez dudas de lo que significas para mí, vuelve a leerlas. Recuerda que detrás de cada palabra está este chico que se enamoró de ti, que empezó a imaginar un futuro a tu lado y que todavía guarda muchísimas ganas de vivir cosas bonitas contigo.</p>
+    <p class="rev">No sé qué nos tenga preparado la vida ni cuántas cosas nos falte aprender, pero hoy sé lo que quiero: quiero seguir conociéndote, seguir compartiendo momentos contigo, seguir viendo esa sonrisa que tanto me gusta y seguir construyendo, paso a paso, esta historia que es nuestra.</p>
+    <p class="rev">Y si pudiera pedir algo, sería que nunca olvidemos cómo nos sentimos al comenzar, esas ganas de hacer las cosas bien y esa ilusión de descubrir todo lo que podíamos llegar a ser juntos. Que, incluso cuando la rutina nos distraiga o los problemas nos agobien, nunca dejemos de recordar que detrás de todo eso seguimos siendo nosotros.</p>
+    <p class="big rev">Te amo muchote muchote mi niña preciosa.</p>
+  </div>
+
+  
+  <div class="end rev">♥</div>
+</main>
+
+<script>
+(function(){
+  var a=document.getElementById('musica'), btn=document.getElementById('mute');
+  a.volume=.8;
+  function start(){a.play().catch(function(){});btn.textContent='♪';}
+  function stop(){a.pause();btn.textContent='✕';}
+  btn.onclick=function(){a.paused?start():stop();};
+
+  document.getElementById('open').onclick=function(){
+    start();
+    document.getElementById('cover').classList.add('gone');
+    setTimeout(observe,400);
+  };
+
+  function observe(){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    },{threshold:.25});
+    document.querySelectorAll('.rev').forEach(function(el){io.observe(el);});
+  }
+
+  var box=document.getElementById('hearts');
+  setInterval(function(){
+    var h=document.createElement('span');
+    h.className='h';h.textContent=Math.random()>.3?'♥':'❤';
+    h.style.left=Math.random()*100+'%';
+    h.style.fontSize=(10+Math.random()*22)+'px';
+    var dur=7+Math.random()*7;
+    h.style.animationDuration=dur+'s';
+    box.appendChild(h);
+    setTimeout(function(){h.remove();},dur*1000);
+  },700);
+})();
+</script>
+</body>
+</html>
